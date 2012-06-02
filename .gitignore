@@ -1,0 +1,8 @@
+*~
+.*.swp
+*.suo
+Thumbs.db
+.DS_Store
+/Program/*/bin/
+/Program/*/obj/
+/Data/*.csv
