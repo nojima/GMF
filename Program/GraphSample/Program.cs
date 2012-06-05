@@ -22,6 +22,12 @@ namespace GraphSample {
         [Option(null, "quiet", HelpText = "トレースメッセージを出力しない")]
         public bool Quiet { get; set; }
 
+        [Option(null, "method", HelpText = "仕様するサンプリングの手法 (RandomVertex, ForestFire)")]
+        public string Method { get; set; }
+
+        [Option(null, "burning-probability", HelpText = "ForestFireにおけるBurning Probability")]
+        public double BurningProbability { get; set; }
+
         [HelpOption]
         public string GetUsage() {
             var help = new HelpText {
@@ -35,35 +41,6 @@ namespace GraphSample {
     }
 
     class Program {
-        /// <summary>
-        /// graphからk個の頂点をランダムに選択し，選ばれた頂点と，それらが誘導する辺のみを持つグラフを返す
-        /// </summary>
-        static DirectedGraph Sample(DirectedGraph graph, int k, Random random) {
-            var choice = new Dictionary<int, int>(k);
-            for (int i = 0; i < k; ++i) {
-                for (; ; ) {
-                    int n = random.Next(graph.VertexCount);
-                    if (!choice.ContainsKey(n)) {
-                        Trace.WriteLine("Choose: " + n.ToString());
-                        choice.Add(n, i);
-                        break;
-                    }
-                }
-            }
-
-            var result = new DirectedGraph(k);
-            foreach (var kv in choice) {
-                int v = kv.Key, i = kv.Value;
-                foreach (Edge e in graph.OutEdges[v]) {
-                    if (choice.ContainsKey(e.Dst)) {
-                        result.AddEdge(new Edge(i, choice[e.Dst]));
-                    }
-                }
-            }
-
-            return result;
-        }
-
         static int Main(string[] args) {
             var options = new Options();
             if (!CommandLineParser.Default.ParseArguments(args, options)) { Environment.Exit(1); }
@@ -77,21 +54,45 @@ namespace GraphSample {
                 Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
                 Trace.AutoFlush = true;
             }
+            if (options.Method == "") {
+                options.Method = "ForestFire";
+            }
+            if (options.BurningProbability == 0.0) {
+                options.BurningProbability = 0.7;
+            }
 
             Trace.WriteLine("Input: " + options.Input);
             Trace.WriteLine("Output: " + options.Output);
             Trace.WriteLine("Output Vertex Count: " + options.VertexCount.ToString());
             Trace.WriteLine("RNG Seed: " + options.Seed.ToString());
+            Trace.WriteLine("Method: " + options.Method);
+            if (options.Method == "ForestFire") {
+                Trace.WriteLine("BurningProbability: " + options.BurningProbability);
+            }
 
             var g = GraphIO.LoadCSV(options.Input);
 
-            if (g.VertexCount < options.VertexCount) {
+            if (g.Vertices.Count < options.VertexCount) {
                 Console.Error.WriteLine("Error: 指定された頂点数が入力グラフの頂点数よりも大きいです．");
                 Environment.Exit(1);
             }
 
             var random = (options.Seed == 0) ? new Random() : new Random(options.Seed);
-            var result = Sample(g, options.VertexCount, random);
+            DirectedGraph result = null;
+
+            switch (options.Method) {
+                case "RandomVertex":
+                    result = new RandomVertexSampler().Sample(g, options.VertexCount, random);
+                    break;
+                case "ForestFire":
+                    result = new ForestFireSampler().Sample(g, options.VertexCount, options.BurningProbability, random);
+                    break;
+                default:
+                    Console.Error.WriteLine("Error: {0} という手法はサポートされていません．", options.Method);
+                    Environment.Exit(1);
+                    break;
+            }
+
             GraphIO.SaveCSV(result, options.Output);
 
             Trace.WriteLine("Done");

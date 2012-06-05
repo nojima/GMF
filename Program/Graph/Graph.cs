@@ -3,6 +3,17 @@ using System.Collections.Generic;
 
 namespace Graph {
     /// <summary>
+    /// 頂点
+    /// </summary>
+    public struct Vertex {
+        public int OriginalId;
+
+        public Vertex(int originalId) {
+            OriginalId = originalId;
+        }
+    }
+
+    /// <summary>
     /// 有向辺
     /// </summary>
     public class Edge {
@@ -19,31 +30,44 @@ namespace Graph {
     /// 有向グラフ
     /// </summary>
     public class DirectedGraph {
-        private int mEdgeCount;
+        /// <summary>
+        /// 頂点集合
+        /// </summary>
+        public List<Vertex> Vertices;
+
+        /// <summary>
+        /// 辺集合
+        /// </summary>
+        public List<Edge> Edges;
 
         /// <summary>
         /// 各頂点に対して，その頂点に入る辺のリストを格納した配列
         /// </summary>
-        public List<Edge>[] InEdges;
+        public List<List<Edge>> InEdges;
 
         /// <summary>
         /// 各頂点に対して，その頂点から出る辺のリストを格納した配列
         /// </summary>
-        public List<Edge>[] OutEdges;
+        public List<List<Edge>> OutEdges;
 
         /// <summary>
         /// コンストラクタ
-        /// 頂点数は最初に確定される必要がある
         /// </summary>
-        /// <param name="vertexCount">グラフの頂点数</param>
-        /// <param name="adjListCapacity">隣接リストの初期容量</param>
-        public DirectedGraph(int vertexCount, int adjListCapacity = 4) {
-            InEdges = new List<Edge>[vertexCount];
-            OutEdges = new List<Edge>[vertexCount];
-            for (int i = 0; i < vertexCount; ++i) {
-                InEdges[i] = new List<Edge>(adjListCapacity);
-                OutEdges[i] = new List<Edge>(adjListCapacity);
-            }
+        public DirectedGraph() {
+            Vertices = new List<Vertex>();
+            Edges = new List<Edge>();
+            InEdges = new List<List<Edge>>();
+            OutEdges = new List<List<Edge>>();
+        }
+
+        /// <summary>
+        /// 頂点を追加する
+        /// </summary>
+        /// <param name="v"></param>
+        public void AddVertex(Vertex v) {
+            Vertices.Add(v);
+            InEdges.Add(new List<Edge>());
+            OutEdges.Add(new List<Edge>());
         }
 
         /// <summary>
@@ -51,20 +75,10 @@ namespace Graph {
         /// </summary>
         /// <param name="e"></param>
         public void AddEdge(Edge e) {
+            Edges.Add(e);
             InEdges[e.Dst].Add(e);
             OutEdges[e.Src].Add(e);
-            ++mEdgeCount;
         }
-
-        /// <summary>
-        /// 頂点数
-        /// </summary>
-        public int VertexCount { get { return InEdges.Length; } }
-
-        /// <summary>
-        /// 辺数
-        /// </summary>
-        public int EdgeCount { get { return mEdgeCount; } }
 
         /// <summary>
         /// vの入次数
@@ -75,5 +89,25 @@ namespace Graph {
         /// vの出次数
         /// </summary>
         public int OutDegree(int v) { return OutEdges[v].Count; }
+
+        /// <summary>
+        /// 指定された頂点集合から誘導される部分グラフを返す
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        public DirectedGraph Induce(IEnumerable<int> vertices) {
+            var g = new DirectedGraph();
+            var index2index = new Dictionary<int, int>();
+            foreach (int v in vertices) {
+                index2index.Add(v, g.Vertices.Count);
+                g.AddVertex(Vertices[v]);
+            }
+            foreach (Edge e in Edges) {
+                if (index2index.ContainsKey(e.Src) && index2index.ContainsKey(e.Dst)) {
+                    g.AddEdge(new Edge(index2index[e.Src], index2index[e.Dst]));
+                }
+            }
+            return g;
+        }
     }
 }
