@@ -9,3 +9,5 @@ Generalized Maximum Flow の高速化を行うための何か．
   グラフのサンプリングを行うプログラム
 * [GraphMetrics](https://github.com/nojima/GMF/tree/master/Program/GraphMetrics/ReadMe.md):
   グラフに対していくつかのメトリクスを計算するプログラム
+* [GeneralizedMaximumFlow](https://github.com/nojima/GMF/tree/master/Program/GeneralizedMaximumFlow/ReadMe.md)
+  Generalized Maximum Flow を計算するプログラム
