@@ -2,11 +2,11 @@
 
 グラフをサンプリングするツール．
 
-Random Vertex Sampling と Forest Fire Sampling が実装されている．
+現在のところ Random Vertex Sampling と Forest Fire Sampling が実装されている．
 
 ## コマンドライン引数
 
-    -vertices              Required. 出力するグラフの頂点数
+    --vertices             Required. 出力するグラフの頂点数
     --input                Required. 入力元のファイル名
     --output               Required. 出力先のファイル名
     --seed                 乱数のシード
