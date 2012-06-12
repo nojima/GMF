@@ -6,7 +6,6 @@ using CommandLine;
 using CommandLine.Text;
 using Graph;
 
-
 namespace GraphMetrics {
     class Options {
         [Option(null, "input", Required = true, HelpText = "入力元のファイル名")]
@@ -75,6 +74,12 @@ namespace GraphMetrics {
             }
             using (var writer2 = new StreamWriter(options.Output + "/OutDegree.csv")) {
                 OutputDegree(writer2, outDegree);
+            }
+            using (var writer3 = new StreamWriter(options.Output + "/Summary.txt")) {
+                writer3.WriteLine("VertexCount: {0}", graph.Vertices.Count);
+                writer3.WriteLine("EdgeCount: {0}", graph.Edges.Count);
+                int[] ids;
+                writer3.WriteLine("ConnectedComponentsCount: {0}", Graph.Algorithms.WeaklyConnectedComponents(graph, out ids));
             }
 
             Trace.WriteLine("Done");
