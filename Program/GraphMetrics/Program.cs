@@ -38,9 +38,6 @@ namespace GraphMetrics {
                 while (outDegree.Count <= graph.OutDegree(i)) { outDegree.Add(0); }
                 inDegree[graph.InDegree(i)] += 1;
                 outDegree[graph.OutDegree(i)] += 1;
-                if (graph.OutDegree(i) == 15324) {
-                    Trace.WriteLine("originalId = " + graph.Vertices[i].OriginalId);
-                }
             }
         }
 
