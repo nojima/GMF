@@ -11,7 +11,7 @@
     --output               Required. 出力先のファイル名
     --seed                 乱数のシード
     --quiet                トレースメッセージを出力しない
-    --method               仕様するサンプリングの手法 (RandomVertex, ForestFire)
+    --method               仕様するサンプリングの手法 (RandomVertex, RandomWalk, ForestFire)
     --burning-probability  ForestFireにおけるBurning Probability
 
 ## Random Vertex Sampling
@@ -35,3 +35,15 @@
 5. 十分な数の頂点をサンプルできたら終了．
 
 詳しくは次の論文を参照: Jure Leskovec, Christos Faloutsos: _Sampling from Large Graphs_, In KDD, 2006
+
+
+## Random Walk Sampling
+
+以下の方法でサンプリングを行う．
+
+1. 一様な確率で始点をひとつ選ぶ．(vとする)
+
+2. 0.15の確率で始点に戻る．そうでない場合は，vの出辺をランダムにひとつ辿る．
+
+3. 2を十分な回数繰り返した後，必要な頂点数に達していない場合は 1 に戻る．
+

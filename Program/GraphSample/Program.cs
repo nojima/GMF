@@ -22,7 +22,7 @@ namespace GraphSample {
         [Option(null, "quiet", HelpText = "トレースメッセージを出力しない")]
         public bool Quiet { get; set; }
 
-        [Option(null, "method", HelpText = "仕様するサンプリングの手法 (RandomVertex, ForestFire)")]
+        [Option(null, "method", HelpText = "仕様するサンプリングの手法 (RandomVertex, RandomWalk, ForestFire)")]
         public string Method { get; set; }
 
         [Option(null, "burning-probability", HelpText = "ForestFireにおけるBurning Probability")]
@@ -83,6 +83,9 @@ namespace GraphSample {
             switch (options.Method) {
                 case "RandomVertex":
                     result = new RandomVertexSampler().Sample(g, options.VertexCount, random);
+                    break;
+                case "RandomWalk":
+                    result = new RandomWalkSampler().Sample(g, options.VertexCount, random);
                     break;
                 case "ForestFire":
                     result = new ForestFireSampler().Sample(g, options.VertexCount, options.BurningProbability, random);

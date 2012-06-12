@@ -43,6 +43,7 @@
     <Compile Include="RandomVertexSampler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomWalkSampler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
