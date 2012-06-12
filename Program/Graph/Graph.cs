@@ -19,10 +19,12 @@ namespace Graph {
     public class Edge {
         public int Src;
         public int Dst;
+        public int Index;
 
         public Edge(int src, int dst) {
             Src = src;
             Dst = dst;
+            Index = -1;
         }
     }
 
@@ -75,6 +77,7 @@ namespace Graph {
         /// </summary>
         /// <param name="e"></param>
         public void AddEdge(Edge e) {
+            e.Index = Edges.Count;
             Edges.Add(e);
             InEdges[e.Dst].Add(e);
             OutEdges[e.Src].Add(e);
