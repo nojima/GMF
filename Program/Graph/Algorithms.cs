@@ -9,11 +9,12 @@ namespace Graph {
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="ids"></param>
+        /// <param name="edgeUsed">その辺を使うか否かを表す配列．nullの場合は全部使う．</param>
         /// <returns>
         /// グラフの連結成分数を返す
         /// また，ids[v]にvが属する連結成分のIDを格納する
         /// </returns>
-        public static int WeaklyConnectedComponents(DirectedGraph graph, out int[] ids) {
+        public static int WeaklyConnectedComponents(DirectedGraph graph, out int[] ids, bool[] edgeUsed = null) {
             int n = graph.Vertices.Count;
             ids = new int[n];
             for (int i = 0; i < n; ++i) { ids[i] = -1; }
@@ -26,6 +27,7 @@ namespace Graph {
                 while (stack.Count > 0) {
                     int v = stack.Pop();
                     foreach (Edge e in graph.OutEdges[v]) {
+                        if (edgeUsed != null && !edgeUsed[e.Index]) { continue; }
                         int w = e.Dst;
                         if (ids[w] == -1) {
                             ids[w] = currId;
@@ -33,6 +35,7 @@ namespace Graph {
                         }
                     }
                     foreach (Edge e in graph.InEdges[v]) {
+                        if (edgeUsed != null && !edgeUsed[e.Index]) { continue; }
                         int w = e.Src;
                         if (ids[w] == -1) {
                             ids[w] = currId;

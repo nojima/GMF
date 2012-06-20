@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Graph;
 
 namespace GeneralizedMaximumFlow {
-    static class FleischerWayne {
+    static public class FleischerWayne {
         /// <summary>
         /// sからtへε-最適な減衰流を流す
         /// </summary>
