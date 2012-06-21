@@ -113,6 +113,7 @@ namespace FastGMF {
             var gmfTime = stopwatch.ElapsedMilliseconds;
 
             Trace.WriteLine("Writing the results");
+            Utility.CreateDirectoryIfNotExists(options.Output);
             using (var writer1 = new StreamWriter(options.Output + "/Flow.csv")) {
                 OutputFlow(writer1, compressedGraph, cap, gain, flow);
             }
