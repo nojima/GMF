@@ -95,17 +95,19 @@ namespace FastGMF {
 
             Trace.WriteLine("Compressing the given graph...");
             Compressor compressor = new Compressor(graph, options.Prob, new Random());
+            var compressedGraph = compressor.CompressedGraph;
+            var mapping = compressor.Mapping;
 
-            Trace.WriteLine("Compressed Vertex Count: " + compressor.CompressedGraph.Vertices.Count);
-            Trace.WriteLine("Compressed Edge Count: " + compressor.CompressedGraph.Edges.Count);
+            Trace.WriteLine("Compressed Vertex Count: " + compressedGraph.Vertices.Count);
+            Trace.WriteLine("Compressed Edge Count: " + compressedGraph.Edges.Count);
 
             Trace.WriteLine("Calculating the generalized maximum flow...");
             double[] flow;
-            double value = FleischerWayne.GeneralizedMaximumFlow(compressor.CompressedGraph, cap, gain, s, t, options.Eps, out flow);
+            double value = FleischerWayne.GeneralizedMaximumFlow(compressor.CompressedGraph, cap, gain, mapping[s], mapping[t], options.Eps, out flow);
 
             Trace.WriteLine("Writing the results");
             using (var writer1 = new StreamWriter(options.Output + "/Flow.csv")) {
-                OutputFlow(writer1, compressor.CompressedGraph, cap, gain, flow);
+                OutputFlow(writer1, compressedGraph, cap, gain, flow);
             }
             using (var writer2 = new StreamWriter(options.Output + "/Value.txt")) {
                 writer2.WriteLine(value);
