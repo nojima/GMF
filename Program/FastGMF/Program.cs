@@ -103,7 +103,7 @@ namespace FastGMF {
 
             Trace.WriteLine("Calculating the generalized maximum flow...");
             double[] flow;
-            double value = FleischerWayne.GeneralizedMaximumFlow(compressor.CompressedGraph, cap, gain, mapping[s], mapping[t], options.Eps, out flow);
+            double value = FleischerWayne.GeneralizedMaximumFlow(compressor.CompressedGraph, cap, gain, mapping[s], mapping[t], options.Eps, out flow, 100000);
 
             Trace.WriteLine("Writing the results");
             using (var writer1 = new StreamWriter(options.Output + "/Flow.csv")) {

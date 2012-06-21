@@ -21,7 +21,7 @@ namespace GeneralizedMaximumFlow {
         /// <param name="flow"></param>
         /// <returns></returns>
         public static double GeneralizedMaximumFlow(
-                DirectedGraph graph, double[] cap, double[] gain, int s, int t, double eps, out double[] flow) {
+                DirectedGraph graph, double[] cap, double[] gain, int s, int t, double eps, out double[] flow, int maxIter = int.MaxValue) {
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
             // 初期化
@@ -39,7 +39,7 @@ namespace GeneralizedMaximumFlow {
             var dummyEdge = new Edge(-1, s);
             var queue = new PriorityQueue<CostVertexEdgeTuple>();
 
-            for (int iter = 0; ; ++iter) {
+            for (int iter = 0; iter < maxIter; ++iter) {
                 if (iter % 100 == 0) { Trace.WriteLine("Iter #" + iter); }
                 bool pathExists = GeneralizedShortestPath(graph, cap, gain, logLength, s, t, n, prevs, costs, dummyEdge, queue);
                 if (!pathExists) { return 0.0; }
