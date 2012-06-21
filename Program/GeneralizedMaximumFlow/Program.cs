@@ -49,30 +49,20 @@ namespace GeneralizedMaximumFlow {
         }
 
         static void Main(string[] args) {
-            var options = new Options();
-            if (!CommandLineParser.Default.ParseArguments(args, options)) { Environment.Exit(1); }
-
-            if (!options.Quiet) {
-                Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-                Trace.AutoFlush = true;
-            }
+            var stopwatch = new Stopwatch();
+            var options = InitializeOptions(args);
             Trace.WriteLine("Input: " + options.Input);
             Trace.WriteLine("Output: " + options.Output);
-
+            
             Trace.WriteLine("Loading the graph from " + options.Input);
+            stopwatch.Start();
             DirectedGraph graph = GraphIO.LoadCSV(options.Input);
+            var graphLoadTime = stopwatch.ElapsedMilliseconds;
 
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
-            int s = -1, t = -1;
-            for (int i = 0; i < n; ++i) {
-                if (graph.Vertices[i].OriginalId == options.Source) { s = i; }
-                if (graph.Vertices[i].OriginalId == options.Sink) { t = i; }
-            }
-            if (s == -1 || t == -1 || s == t) {
-                Console.Error.WriteLine("Error: 始点または終点が不正です．");
-                Environment.Exit(1);
-            }
+            int s, t;
+            FindSourceAndSink(options, graph, out s, out t);
 
             Trace.WriteLine("VertexCount: " + n);
             Trace.WriteLine("EdgeCount: " + m);
@@ -89,8 +79,10 @@ namespace GeneralizedMaximumFlow {
             }
 
             Trace.WriteLine("Caluculating the generalized maximum flow");
+            stopwatch.Restart();
             var flow = new double[m];
             double value = FleischerWayne.GeneralizedMaximumFlow(graph, cap, gain, s, t, options.Eps, out flow);
+            var gmfTime = stopwatch.ElapsedMilliseconds;
 
             Trace.WriteLine("Writing the results");
             using (var writer1 = new StreamWriter(options.Output + "/Flow.csv")) {
@@ -99,8 +91,43 @@ namespace GeneralizedMaximumFlow {
             using (var writer2 = new StreamWriter(options.Output + "/Value.txt")) {
                 writer2.WriteLine(value);
             }
+            using (var writer3 = new StreamWriter(options.Output + "/Summary.txt")) {
+                writer3.WriteLine("Input: " + options.Input);
+                writer3.WriteLine("Vertex Count: " + n);
+                writer3.WriteLine("Edge Count: " + m);
+                writer3.WriteLine("Source: " + options.Source);
+                writer3.WriteLine("Sink: " + options.Sink);
+                writer3.WriteLine("Eps: " + options.Eps);
+                writer3.WriteLine("Graph Load Time [ms]: " + graphLoadTime);
+                writer3.WriteLine("GMF Time [ms]: " + gmfTime);
+            }
 
             Trace.WriteLine("Done");
+        }
+
+        private static void FindSourceAndSink(Options options, DirectedGraph graph, out int s, out int t) {
+            s = -1;
+            t = -1;
+
+            for (int i = 0; i < graph.Vertices.Count; ++i) {
+                if (graph.Vertices[i].OriginalId == options.Source) { s = i; }
+                if (graph.Vertices[i].OriginalId == options.Sink) { t = i; }
+            }
+            if (s == -1 || t == -1 || s == t) {
+                Console.Error.WriteLine("Error: 始点または終点が不正です．");
+                Environment.Exit(1);
+            }
+        }
+
+        private static Options InitializeOptions(string[] args) {
+            var options = new Options();
+            if (!CommandLineParser.Default.ParseArguments(args, options)) { Environment.Exit(1); }
+
+            if (!options.Quiet) {
+                Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+                Trace.AutoFlush = true;
+            }
+            return options;
         }
     }
 }
