@@ -64,7 +64,10 @@ namespace FastGMF {
             Trace.WriteLine("Output: " + options.Output);
 
             Trace.WriteLine("Loading the graph from " + options.Input);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             DirectedGraph graph = GraphIO.LoadCSV(options.Input);
+            var graphLoadTime = stopwatch.ElapsedMilliseconds;
 
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
@@ -94,7 +97,9 @@ namespace FastGMF {
             }
 
             Trace.WriteLine("Compressing the given graph...");
+            stopwatch.Restart();
             Compressor compressor = new Compressor(graph, options.Prob, new Random());
+            var compressionTime = stopwatch.ElapsedMilliseconds;
             var compressedGraph = compressor.CompressedGraph;
             var mapping = compressor.Mapping;
 
@@ -102,8 +107,10 @@ namespace FastGMF {
             Trace.WriteLine("Compressed Edge Count: " + compressedGraph.Edges.Count);
 
             Trace.WriteLine("Calculating the generalized maximum flow...");
+            stopwatch.Restart();
             double[] flow;
             double value = FleischerWayne.GeneralizedMaximumFlow(compressor.CompressedGraph, cap, gain, mapping[s], mapping[t], options.Eps, out flow, 100000);
+            var gmfTime = stopwatch.ElapsedMilliseconds;
 
             Trace.WriteLine("Writing the results");
             using (var writer1 = new StreamWriter(options.Output + "/Flow.csv")) {
@@ -111,6 +118,18 @@ namespace FastGMF {
             }
             using (var writer2 = new StreamWriter(options.Output + "/Value.txt")) {
                 writer2.WriteLine(value);
+            }
+            using (var writer3 = new StreamWriter(options.Output + "/Sunnary.txt")) {
+                writer3.WriteLine("VertexCount: " + n);
+                writer3.WriteLine("EdgeCount: " + m);
+                writer3.WriteLine("Source: " + options.Source);
+                writer3.WriteLine("Sink: " + options.Sink);
+                writer3.WriteLine("Prob: " + options.Prob);
+                writer3.WriteLine("Compressed Vertex Count: " + compressedGraph.Vertices.Count);
+                writer3.WriteLine("Compressed Edge Count: " + compressedGraph.Edges.Count);
+                writer3.WriteLine("Graph Load Time [ms]: " + graphLoadTime);
+                writer3.WriteLine("Compression Time [ms]: " + compressionTime);
+                writer3.WriteLine("GMF Time [ms]: " + gmfTime);
             }
 
             Trace.WriteLine("Done");
