@@ -22,6 +22,10 @@ namespace GeneralizedMaximumFlow {
         /// <returns></returns>
         public static double GeneralizedMaximumFlow(
                 DirectedGraph graph, double[] cap, double[] gain, int s, int t, double eps, out double[] flow, int maxIter = int.MaxValue) {
+            if (s == t) {
+                throw new ArgumentException("始点と終点が同じ頂点です.");
+            }
+
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
             // 初期化
