@@ -5,17 +5,33 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{56DBAF86-6A31-4B66-8F52-2C55FC5888C8}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{EA93BB6A-866D-48AA-8B67-EB0B8F5338C0}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Graph</RootNamespace>
-    <AssemblyName>Graph</AssemblyName>
+    <RootNamespace>AccuracyExperiment</RootNamespace>
+    <AssemblyName>AccuracyExperiment</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -42,13 +58,18 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms.cs" />
-    <Compile Include="Graph.cs" />
-    <Compile Include="GraphIO.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GeneralizedMaximumFlow\GeneralizedMaximumFlow.csproj">
+      <Project>{ADBC5AF9-0394-4208-B2B6-E5892A4C0284}</Project>
+      <Name>GeneralizedMaximumFlow</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Graph\Graph.csproj">
+      <Project>{56DBAF86-6A31-4B66-8F52-2C55FC5888C8}</Project>
+      <Name>Graph</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ThirdParty\CommandLine\src\libcmdline\CommandLine.csproj">
       <Project>{5DEA2811-2FFA-4959-830B-CAD3ACACABEB}</Project>
       <Name>CommandLine</Name>
