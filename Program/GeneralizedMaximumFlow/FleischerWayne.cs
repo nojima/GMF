@@ -59,8 +59,8 @@ namespace GeneralizedMaximumFlow {
 
             // 値を計算して返す
             double value = 0.0;
-            for (int e = 0; e < m; ++e) {
-                value += flow[e] * gain[e];
+            foreach (Edge e in graph.InEdges[t]) {
+                value += flow[e.Index] * gain[e.Index];
             }
             return value;
         }
