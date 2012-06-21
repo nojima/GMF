@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GeneralizedMaximumFlow {
+namespace Graph {
     /// <summary>
     /// 優先度キュー
     /// 小さい要素から先に取り出す
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    class PriorityQueue<T> where T : IComparable<T> {
+    public class PriorityQueue<T> where T : IComparable<T> {
         private List<T> heap;
 
         /// <summary>

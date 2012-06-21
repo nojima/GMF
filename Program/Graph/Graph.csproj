@@ -45,6 +45,7 @@
     <Compile Include="Algorithms.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="GraphIO.cs" />
+    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>

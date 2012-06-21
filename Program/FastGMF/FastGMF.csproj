@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="CompressedGMF.cs" />
     <Compile Include="Compressor.cs" />
+    <Compile Include="GreedyGMF.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

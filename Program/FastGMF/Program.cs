@@ -63,15 +63,8 @@ namespace FastGMF {
 
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
-            int s = -1, t = -1;
-            for (int i = 0; i < n; ++i) {
-                if (graph.Vertices[i].OriginalId == options.Source) { s = i; }
-                if (graph.Vertices[i].OriginalId == options.Sink) { t = i; }
-            }
-            if (s == -1 || t == -1 || s == t) {
-                Console.Error.WriteLine("Error: 始点または終点が不正です．");
-                Environment.Exit(1);
-            }
+            int s, t;
+            Utility.FindSourceAndSink(options.Source, options.Sink, graph, out s, out t);
 
             Trace.WriteLine("VertexCount: " + n);
             Trace.WriteLine("EdgeCount: " + m);

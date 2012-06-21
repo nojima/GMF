@@ -54,7 +54,7 @@ namespace GeneralizedMaximumFlow {
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
             int s, t;
-            FindSourceAndSink(options, graph, out s, out t);
+            Utility.FindSourceAndSink(options.Source, options.Sink, graph, out s, out t);
 
             Trace.WriteLine("VertexCount: " + n);
             Trace.WriteLine("EdgeCount: " + m);
@@ -74,20 +74,6 @@ namespace GeneralizedMaximumFlow {
             GMF.Run(options.Input, options.Output, graphLoadTime, graph, cap, gain, s, t, options.Eps);
 
             Trace.WriteLine("Done");
-        }
-
-        private static void FindSourceAndSink(Options options, DirectedGraph graph, out int s, out int t) {
-            s = -1;
-            t = -1;
-
-            for (int i = 0; i < graph.Vertices.Count; ++i) {
-                if (graph.Vertices[i].OriginalId == options.Source) { s = i; }
-                if (graph.Vertices[i].OriginalId == options.Sink) { t = i; }
-            }
-            if (s == -1 || t == -1 || s == t) {
-                Console.Error.WriteLine("Error: 始点または終点が不正です．");
-                Environment.Exit(1);
-            }
         }
 
         private static Options InitializeOptions(string[] args) {

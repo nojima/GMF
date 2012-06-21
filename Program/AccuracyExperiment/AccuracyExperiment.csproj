@@ -62,6 +62,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FastGMF\FastGMF.csproj">
+      <Project>{045B4F22-29ED-4C36-AE38-BD5F2B3DA00C}</Project>
+      <Name>FastGMF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GeneralizedMaximumFlow\GeneralizedMaximumFlow.csproj">
       <Project>{ADBC5AF9-0394-4208-B2B6-E5892A4C0284}</Project>
       <Name>GeneralizedMaximumFlow</Name>
