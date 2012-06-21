@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Graph;
 
 namespace FastGMF {
-    class Compressor {
+    public class Compressor {
         public Compressor(DirectedGraph graph, double prob, Random random) {
             int[] mapping;
             CompressedGraph = Compress(graph, prob, random, out mapping);

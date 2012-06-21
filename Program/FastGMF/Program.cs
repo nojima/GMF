@@ -43,15 +43,7 @@ namespace FastGMF {
     }
     
     class Program {
-        static void OutputFlow(StreamWriter writer, DirectedGraph graph, double[] cap, double[] gain, double[] flow) {
-            for (int e = 0; e < graph.Edges.Count; ++e) {
-                writer.WriteLine("{0},{1},{2},{3},{4}",
-                    graph.Vertices[graph.Edges[e].Src].OriginalId,
-                    graph.Vertices[graph.Edges[e].Dst].OriginalId,
-                    cap[e], gain[e], flow[e]);
-            }
-        }
-
+        
         static void Main(string[] args) {
             var options = new Options();
             if (!CommandLineParser.Default.ParseArguments(args, options)) { Environment.Exit(1); }
@@ -96,44 +88,16 @@ namespace FastGMF {
                 gain[e] = 0.5;
             }
 
-            Trace.WriteLine("Compressing the given graph...");
-            stopwatch.Restart();
-            Compressor compressor = new Compressor(graph, options.Prob, new Random());
-            var compressionTime = stopwatch.ElapsedMilliseconds;
-            var compressedGraph = compressor.CompressedGraph;
-            var mapping = compressor.Mapping;
+            var prob = options.Prob;
+            var input = options.Input;
+            var output = options.Output;
+            var eps = options.Eps;
 
-            Trace.WriteLine("Compressed Vertex Count: " + compressedGraph.Vertices.Count);
-            Trace.WriteLine("Compressed Edge Count: " + compressedGraph.Edges.Count);
-
-            Trace.WriteLine("Calculating the generalized maximum flow...");
-            stopwatch.Restart();
-            double[] flow;
-            double value = FleischerWayne.GeneralizedMaximumFlow(compressor.CompressedGraph, cap, gain, mapping[s], mapping[t], options.Eps, out flow, 100000);
-            var gmfTime = stopwatch.ElapsedMilliseconds;
-
-            Trace.WriteLine("Writing the results");
-            Utility.CreateDirectoryIfNotExists(options.Output);
-            using (var writer1 = new StreamWriter(options.Output + "/Flow.csv")) {
-                OutputFlow(writer1, compressedGraph, cap, gain, flow);
-            }
-            using (var writer2 = new StreamWriter(options.Output + "/Value.txt")) {
-                writer2.WriteLine(value);
-            }
-            using (var writer3 = new StreamWriter(options.Output + "/Sunnary.txt")) {
-                writer3.WriteLine("VertexCount: " + n);
-                writer3.WriteLine("EdgeCount: " + m);
-                writer3.WriteLine("Source: " + options.Source);
-                writer3.WriteLine("Sink: " + options.Sink);
-                writer3.WriteLine("Prob: " + options.Prob);
-                writer3.WriteLine("Compressed Vertex Count: " + compressedGraph.Vertices.Count);
-                writer3.WriteLine("Compressed Edge Count: " + compressedGraph.Edges.Count);
-                writer3.WriteLine("Graph Load Time [ms]: " + graphLoadTime);
-                writer3.WriteLine("Compression Time [ms]: " + compressionTime);
-                writer3.WriteLine("GMF Time [ms]: " + gmfTime);
-            }
+            CompressedGMF.Run(graph, graphLoadTime, s, t, cap, gain, prob, output, eps);
 
             Trace.WriteLine("Done");
         }
+
+        
     }
 }
