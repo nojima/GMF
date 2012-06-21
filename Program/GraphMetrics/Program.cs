@@ -61,11 +61,16 @@ namespace GraphMetrics {
             Trace.WriteLine("Loading the graph from " + options.Input);
             DirectedGraph graph = GraphIO.LoadCSV(options.Input);
 
-            Trace.WriteLine("Caluculating the degree distribution");
+            Trace.WriteLine("Caluculating the degree distribution...");
             List<int> inDegree, outDegree;
             DegreeDistribution(graph, out inDegree, out outDegree);
 
+            Trace.WriteLine("Caluculating the weakly connected components...");
+            int[] ids;
+            int ncc = Graph.Algorithms.WeaklyConnectedComponents(graph, out ids);
+
             Trace.WriteLine("Writing the result");
+            Utility.CreateDirectoryIfNotExists(options.Output);
             using (var writer1 = new StreamWriter(options.Output + "/InDegree.csv")) {
                 OutputDegree(writer1, inDegree);
             }
@@ -73,10 +78,25 @@ namespace GraphMetrics {
                 OutputDegree(writer2, outDegree);
             }
             using (var writer3 = new StreamWriter(options.Output + "/Summary.txt")) {
-                writer3.WriteLine("VertexCount: {0}", graph.Vertices.Count);
-                writer3.WriteLine("EdgeCount: {0}", graph.Edges.Count);
-                int[] ids;
-                writer3.WriteLine("ConnectedComponentsCount: {0}", Graph.Algorithms.WeaklyConnectedComponents(graph, out ids));
+                writer3.WriteLine("Vertex Count: {0}", graph.Vertices.Count);
+                writer3.WriteLine("Edge Count: {0}", graph.Edges.Count);
+                writer3.WriteLine("Connected Component Count: {0}", ncc);
+            }
+            using (var writer4 = new StreamWriter(options.Output + "/ConnectedComponents.txt")) {
+                var cc = new List<int>[ncc];
+                for (int i = 0; i < ncc; ++i) {
+                    cc[i] = new List<int>();
+                }
+                for (int i = 0; i < ids.Length; ++i) {
+                    cc[ids[i]].Add(i);
+                }
+                for (int i = 0; i < ncc; ++i) {
+                    writer4.Write("{0}:", i);
+                    for (int j = 0; j < cc[i].Count; ++j) {
+                        writer4.Write(" {0}", cc[i][j]);
+                    }
+                    writer4.WriteLine();
+                }
             }
 
             Trace.WriteLine("Done");
