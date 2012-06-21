@@ -59,8 +59,8 @@ namespace AccuracyExperiment {
                 gain[e] = 0.5;
             }
 
-            // TODO: オプションで動作を変えれるように (コメントアウトではなく)
             /*
+            // TODO: オプションで動作を変えれるように (コメントアウトではなく)
             var random = new Random();
             for (int i = 0; i < options.TestCase; ++i) {
                 int s, t;
@@ -126,63 +126,12 @@ namespace AccuracyExperiment {
                 new [] {48,1586703,778143},
                 new [] {49,25304,872317},
             };
-            var values = new[] {
-                0.001953125,
-                0.015625,
-                0.001953125,
-                0.03125,
-                0.040807599852071,
-                0.8495498285060974,
-                0.170565119760479,
-                0.0512551700367647,
-                0.03501958819241985,
-                0.0078125,
-                0.0078125,
-                0.0078125,
-                0.0,
-                0.02574666341145835,
-                0.00390625,
-                0.03108867994100295,
-                0.0,
-                0.0,
-                0.01562499999999999,
-                0.0078125,
-                0.0078125,
-                0.031088679941002936,
-                0.00048828125,
-                0.0019531249999999987,
-                0.000244140625,
-                0.015625,
-                0.0779400887573965,
-                0.015625,
-                0.03125,
-                0.015625,
-                0.0078125,
-                0.0078125,
-                0.0625,
-                0.0009765625,
-                0.5,
-                0.0078125,
-                0.038879751461988334,
-                0.00390625,
-                0.00390625,
-                0.125,
-                0.125,
-                0.00390050551470588,
-                0.00048828125,
-                0.046691715542521994,
-                6.103515625e-05,
-                0.015625,
-                0.015625,
-                0.015625,
-                0.00780101102941175,
-                0.02715992647058825,
-            };
 
             for (int i = 0; i < sourceSinkList.Length; ++i) {
                 var output = string.Format("{0}/{1}", options.Output, i);
                 int s, t;
                 Utility.FindSourceAndSink(sourceSinkList[i][1], sourceSinkList[i][2], graph, out s, out t);
+                /*
                 try {
                     CompressedGMF.Run(graph, graphLoadTime, s, t, cap, gain, 0.5, output, options.Eps);
                 } catch (ArgumentException) {
@@ -191,6 +140,8 @@ namespace AccuracyExperiment {
                     // ディレクトリだけ作って何もしない
                     Utility.CreateDirectoryIfNotExists(output);
                 }
+                */
+                GMF.Run(options.Input, output, graphLoadTime, graph, cap, gain, s, t, options.Eps, "Greedy");
             }
         }
 

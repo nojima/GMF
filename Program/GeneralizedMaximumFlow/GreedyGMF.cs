@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Graph;
 
-namespace FastGMF {
-    public class GreedyGMF {
+namespace GeneralizedMaximumFlow {
+    public static class GreedyGMF {
         private const double Infty = 1e12;
 
-        public double GeneralizedMaximumFlow(
-                DirectedGraph graph, double[] cap, double[] gain, int s, int t, double eps, out double[] flow) {
+        public static double GeneralizedMaximumFlow(
+                DirectedGraph graph, double[] cap, double[] gain, int s, int t, out double[] flow) {
             if (s == t) {
                 throw new ArgumentException("始点と終点が同じ頂点です.");
             }

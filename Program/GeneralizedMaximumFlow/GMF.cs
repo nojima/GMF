@@ -18,11 +18,19 @@ namespace GeneralizedMaximumFlow {
         /// <param name="s"></param>
         /// <param name="t"></param>
         /// <param name="eps"></param>
-        public static void Run(string input, string output, long graphLoadTime, DirectedGraph graph, double[] cap, double[] gain, int s, int t, double eps) {
+        public static void Run(string input, string output, long graphLoadTime, DirectedGraph graph, double[] cap, double[] gain,
+                int s, int t, double eps, string method = "FleischerWayne") {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var flow = new double[graph.Edges.Count];
-            double value = FleischerWayne.GeneralizedMaximumFlow(graph, cap, gain, s, t, eps, out flow);
+            double value;
+            if (method == "FleischerWayne") {
+                value = FleischerWayne.GeneralizedMaximumFlow(graph, cap, gain, s, t, eps, out flow);
+            } else if (method == "Greedy") {
+                value = GreedyGMF.GeneralizedMaximumFlow(graph, cap, gain, s, t, out flow);
+            } else {
+                throw new ArgumentException("method " + method + " は定義されていません．");
+            }
             var gmfTime = stopwatch.ElapsedMilliseconds;
             stopwatch.Stop();
 
@@ -40,6 +48,7 @@ namespace GeneralizedMaximumFlow {
                 writer3.WriteLine("Edge Count: " + graph.Edges.Count);
                 writer3.WriteLine("Source: " + graph.Vertices[s].OriginalId);
                 writer3.WriteLine("Sink: " + graph.Vertices[t].OriginalId);
+                writer3.WriteLine("Method: " + method);
                 writer3.WriteLine("Eps: " + eps);
                 writer3.WriteLine("Graph Load Time [ms]: " + graphLoadTime);
                 writer3.WriteLine("GMF Time [ms]: " + gmfTime);
