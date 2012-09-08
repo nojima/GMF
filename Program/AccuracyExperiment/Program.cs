@@ -142,7 +142,7 @@ namespace AccuracyExperiment {
                     Utility.CreateDirectoryIfNotExists(output);
                 }
                 */
-                GMF.Run(options.Input, output, graphLoadTime, graph, cap, gain, s, t, options.Eps, "Greedy");
+                GMF.Run(options.Input, output, graphLoadTime, graph, cap, gain, s, t, options.Eps, "GreedyImproved");
             }
         }
 

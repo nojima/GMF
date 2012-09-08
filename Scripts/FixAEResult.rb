@@ -1,4 +1,4 @@
-target_dir = File.dirname(__FILE__) + "/../Output/AE_Random_Greedy"
+target_dir = File.dirname(__FILE__) + "/../Output/AE_Random_GreedyImproved"
 Dir.glob(target_dir + "/*") do |dirname|
   puts dirname
   open(dirname + "/Flow.csv") do |f|

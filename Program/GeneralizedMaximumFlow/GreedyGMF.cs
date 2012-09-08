@@ -8,7 +8,7 @@ namespace GeneralizedMaximumFlow {
         private const double Infty = 1e12;
 
         public static double GeneralizedMaximumFlow(
-                DirectedGraph graph, double[] cap, double[] gain, int s, int t, out double[] flow) {
+                DirectedGraph graph, double[] cap, double[] gain, int s, int t, ref double[] flow) {
             if (s == t) {
                 throw new ArgumentException("始点と終点が同じ頂点です.");
             }
@@ -16,7 +16,8 @@ namespace GeneralizedMaximumFlow {
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
 
-            flow = new double[m];
+            if (flow == null)
+                flow = new double[m];
             var income = new double[n];
             var prev = new Edge[n];
             while (true) {
@@ -81,7 +82,7 @@ namespace GeneralizedMaximumFlow {
             return value;
         }
 
-        public static void ConstructInitialFlow(DirectedGraph graph, double[] cap, double[] gain, int s, int t, out double[] flow) {
+        public static double ConstructInitialFlow(DirectedGraph graph, double[] cap, double[] gain, int s, int t, out double[] flow) {
             int n = graph.Vertices.Count;
             int m = graph.Edges.Count;
 
@@ -89,8 +90,8 @@ namespace GeneralizedMaximumFlow {
             var income = new double[n];
             var queue = new PriorityQueue<State>();
 
-            income[s] = Infty;
-            queue.Enqueue(new State(Infty, s, new Edge(s, s)));
+            income[s] = 1.0;
+            queue.Enqueue(new State(1.0, s, new Edge(s, s)));
 
             while (queue.Count > 0) {
                 State state = queue.Dequeue();
@@ -118,18 +119,33 @@ namespace GeneralizedMaximumFlow {
 
             flow = new double[m];
             var visit = new bool[n];
-            Translate(graph, flow2, flow, visit, t);
+            Translate(graph, gain, flow2, flow, visit, t);
+
+            foreach (Edge e in graph.Edges) {
+                if (cap[e.Index] < flow[e.Index]) {
+                    if (flow[e.Index] - cap[e.Index] < 1e-8)
+                        flow[e.Index] = cap[e.Index];           // 計算誤差対策
+                    else
+                        Debug.Assert(false);
+                }
+            }
+
+            double value = 0;
+            foreach (Edge e in graph.InEdges[t]) {
+                value += gain[e.Index] * flow[e.Index];
+            }
+            return value;
         }
 
-        private static void Translate(DirectedGraph graph, double[] flow, double[] gflow, bool[] visit, int v) {
+        private static void Translate(DirectedGraph graph, double[] gain, double[] flow, double[] gflow, bool[] visit, int v) {
             visit[v] = true;
             double x = 0, y = 0;
             foreach (var e in graph.InEdges[v]) {
                 if (flow[e.Index] > 1e-10) {
                     if (!visit[e.Src])
-                        Translate(graph, flow, gflow, visit, e.Src);
+                        Translate(graph, gain, flow, gflow, visit, e.Src);
                     x += flow[e.Index];
-                    y += gflow[e.Index];
+                    y += gflow[e.Index] * gain[e.Index];
                 }
             }
             foreach (var e in graph.OutEdges[v]) {

@@ -22,12 +22,15 @@ namespace GeneralizedMaximumFlow {
                 int s, int t, double eps, string method = "FleischerWayne") {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var flow = new double[graph.Edges.Count];
+            double[] flow = null;
             double value;
             if (method == "FleischerWayne") {
                 value = FleischerWayne.GeneralizedMaximumFlow(graph, cap, gain, s, t, eps, out flow);
             } else if (method == "Greedy") {
-                value = GreedyGMF.GeneralizedMaximumFlow(graph, cap, gain, s, t, out flow);
+                value = GreedyGMF.GeneralizedMaximumFlow(graph, cap, gain, s, t, ref flow);
+            } else if (method == "GreedyImproved") {
+                GreedyGMF.ConstructInitialFlow(graph, cap, gain, s, t, out flow);
+                value = GreedyGMF.GeneralizedMaximumFlow(graph, cap, gain, s, t, ref flow);
             } else {
                 throw new ArgumentException("method " + method + " は定義されていません．");
             }
