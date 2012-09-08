@@ -52,11 +52,12 @@ namespace AccuracyExperiment {
             int m = graph.Edges.Count;
             var cap = new double[m];
             var gain = new double[m];
+            var random = new Random(12345);
 
-            // とりあえず cap と gain は一つの値で埋める
+            // とりあえず cap と gain はランダムに決める
             for (int e = 0; e < m; ++e) {
-                cap[e] = 1.0;
-                gain[e] = 0.5;
+                cap[e] = random.NextDouble() * 2;
+                gain[e] = random.NextDouble();
             }
 
             /*

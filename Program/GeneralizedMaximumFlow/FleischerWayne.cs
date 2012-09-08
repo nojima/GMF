@@ -41,7 +41,7 @@ namespace GeneralizedMaximumFlow {
             var prevs = new Edge[n];
             var costs = new double[n];
             var dummyEdge = new Edge(-1, s);
-            var queue = new PriorityQueue<CostVertexEdgeTuple>();
+            var queue = new PriorityQueue<State>();
 
             for (int iter = 0; iter < maxIter; ++iter) {
                 if (iter % 100 == 0) { Trace.WriteLine("Iter #" + iter); }
@@ -68,15 +68,16 @@ namespace GeneralizedMaximumFlow {
         private static bool GeneralizedShortestPath(
                 DirectedGraph graph, double[] cap, double[] gain, double[] logLength,
                 int s, int t, int n, Edge[] prevs, double[] costs,
-                Edge dummyEdge, PriorityQueue<CostVertexEdgeTuple> queue) {
+                Edge dummyEdge, PriorityQueue<State> queue) {
+            queue.Clear();
             for (int i = 0; i < n; ++i) {
                 prevs[i] = null;
                 costs[i] = double.PositiveInfinity;
             }
-            queue.Enqueue(new CostVertexEdgeTuple(0.0, s, dummyEdge));
+            queue.Enqueue(new State(0.0, s, dummyEdge));
             costs[s] = 0.0;
             while (queue.Count > 0) {
-                CostVertexEdgeTuple tuple = queue.Dequeue();
+                State tuple = queue.Dequeue();
                 int v = tuple.Vertex;
                 if (prevs[v] != null) { continue; }
                 prevs[v] = tuple.Edge;
@@ -86,27 +87,25 @@ namespace GeneralizedMaximumFlow {
                     double newCost = (costs[v] + Math.Exp(logLength[e.Index])) / gain[e.Index];
                     if (newCost < costs[w]) {
                         costs[w] = newCost;
-                        queue.Enqueue(new CostVertexEdgeTuple(newCost, w, e));
+                        queue.Enqueue(new State(newCost, w, e));
                     }
                 }
             }
-            if (prevs[t] == null) { return false; }
-            queue.Clear();
-            return true;
+            return prevs[t] != null;
         }
 
-        private struct CostVertexEdgeTuple : IComparable<CostVertexEdgeTuple> {
+        private struct State : IComparable<State> {
             public double Cost;
             public int Vertex;
             public Edge Edge;
 
-            public CostVertexEdgeTuple(double cost, int vertex, Edge edge) {
+            public State(double cost, int vertex, Edge edge) {
                 Cost = cost;
                 Vertex = vertex;
                 Edge = edge;
             }
 
-            public int CompareTo(CostVertexEdgeTuple other) {
+            public int CompareTo(State other) {
                 return Cost.CompareTo(other.Cost);
             }
         }

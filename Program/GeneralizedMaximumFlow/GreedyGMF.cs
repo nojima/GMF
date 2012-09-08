@@ -22,7 +22,10 @@ namespace GeneralizedMaximumFlow {
             while (true) {
                 var queue = new PriorityQueue<State>();
 
-                for (int i = 0; i < n; ++i) { income[i] = 0; prev[i] = null; }
+                for (int i = 0; i < n; ++i) {
+                    income[i] = 0;
+                    prev[i] = null;
+                }
 
                 income[s] = Infty;
                 queue.Enqueue(new State(Infty, s, new Edge(s, s)));
@@ -35,6 +38,8 @@ namespace GeneralizedMaximumFlow {
                     if (v == t) { break; }
 
                     foreach (Edge e in graph.OutEdges[v]) {
+                        Debug.Assert(cap[e.Index] - flow[e.Index] > -1e-8);
+                        if (cap[e.Index] - flow[e.Index] <= 1e-10) { continue; }
                         int w = e.Dst;
                         double newIncome = Math.Min(income[v], cap[e.Index] - flow[e.Index]) * gain[e.Index];
                         if (newIncome > income[w]) {
@@ -49,8 +54,18 @@ namespace GeneralizedMaximumFlow {
                     break;
                 }
 
+                double maxVaiolateRatio = 0.0;
+                double f = 1.0;
                 int u = t;
-                double f = income[t];
+                while (u != s) {
+                    Edge e = prev[u];
+                    f /= gain[e.Index];
+                    double vaiolateRatio = f / (cap[e.Index] - flow[e.Index]);
+                    if (vaiolateRatio > maxVaiolateRatio) { maxVaiolateRatio = vaiolateRatio; }
+                    u = e.Src;
+                }
+                f = 1.0 / maxVaiolateRatio;
+                u = t;
                 while (u != s) {
                     Edge e = prev[u];
                     f /= gain[e.Index];

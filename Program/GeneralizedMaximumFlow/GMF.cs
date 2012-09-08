@@ -52,6 +52,7 @@ namespace GeneralizedMaximumFlow {
                 writer3.WriteLine("Eps: " + eps);
                 writer3.WriteLine("Graph Load Time [ms]: " + graphLoadTime);
                 writer3.WriteLine("GMF Time [ms]: " + gmfTime);
+                writer3.WriteLine("Value: " + value);
             }
         }
 
