@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastGMF", "FastGMF\FastGMF.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuracyExperiment", "AccuracyExperiment\AccuracyExperiment.csproj", "{EA93BB6A-866D-48AA-8B67-EB0B8F5338C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{0E5F993B-A127-4CCF-A2D2-584159B75412}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -52,6 +54,9 @@ Global
 		{EA93BB6A-866D-48AA-8B67-EB0B8F5338C0}.Debug|x64.Build.0 = Debug|x64
 		{EA93BB6A-866D-48AA-8B67-EB0B8F5338C0}.Release|x64.ActiveCfg = Release|x64
 		{EA93BB6A-866D-48AA-8B67-EB0B8F5338C0}.Release|x64.Build.0 = Release|x64
+		{0E5F993B-A127-4CCF-A2D2-584159B75412}.Debug|x64.ActiveCfg = Debug|x64
+		{0E5F993B-A127-4CCF-A2D2-584159B75412}.Debug|x64.Build.0 = Debug|x64
+		{0E5F993B-A127-4CCF-A2D2-584159B75412}.Release|x64.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -112,5 +112,20 @@ namespace Graph {
             }
             return g;
         }
+
+        public void CopyTo(DirectedGraph other) {
+            for (int i = 0; i < other.Vertices.Count; ++i) {
+                other.InEdges[i].Clear();
+                other.OutEdges[i].Clear();
+            }
+            other.Vertices.Clear();
+            other.Edges.Clear();
+            other.Vertices.AddRange(this.Vertices);
+            other.Edges.AddRange(this.Edges);
+            for (int i = 0; i < Vertices.Count; ++i) {
+                other.InEdges[i].AddRange(this.InEdges[i]);
+                other.OutEdges[i].AddRange(this.OutEdges[i]);
+            }
+        }
     }
 }
