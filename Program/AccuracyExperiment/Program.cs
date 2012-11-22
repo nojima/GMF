@@ -54,10 +54,28 @@ namespace AccuracyExperiment {
             var gain = new double[m];
             var random = new Random(12345);
 
-            // とりあえず cap と gain はランダムに決める
-            for (int e = 0; e < m; ++e) {
-                cap[e] = random.NextDouble() * 2;
-                gain[e] = random.NextDouble();
+            int capAndGainType = 2;
+            if (capAndGainType == 0) {
+                // とりあえず cap と gain はランダムに決める
+                for (int e = 0; e < m; ++e) {
+                    cap[e] = random.NextDouble() * 2;
+                    gain[e] = random.NextDouble();
+                }
+            } else if (capAndGainType == 1) {
+                // cap と gain を固定
+                for (int e = 0; e < m; ++e) {
+                    cap[e] = 1.0;
+                    gain[e] = 0.5;
+                }
+            } else if (capAndGainType == 2) {
+                // 数種類の gain をつくる
+                double[] gains = new double[] { 0.32768, 0.512, 0.8 };
+                for (int e = 0; e < m; ++e) {
+                    cap[e] = 1.0;
+                    gain[e] = gains[random.Next(gains.Length)];
+                }
+            } else {
+                Debug.Assert(false);
             }
 
             /*
@@ -142,7 +160,7 @@ namespace AccuracyExperiment {
                     Utility.CreateDirectoryIfNotExists(output);
                 }
                 */
-                GMF.Run(options.Input, output, graphLoadTime, graph, cap, gain, s, t, options.Eps, "GreedyImproved");
+                GMF.Run(options.Input, output, graphLoadTime, graph, cap, gain, s, t, options.Eps, "FleischerWayne");
             }
         }
 
