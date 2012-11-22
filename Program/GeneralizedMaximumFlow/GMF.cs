@@ -61,10 +61,12 @@ namespace GeneralizedMaximumFlow {
 
         static void OutputFlow(StreamWriter writer, DirectedGraph graph, double[] cap, double[] gain, double[] flow) {
             for (int e = 0; e < graph.Edges.Count; ++e) {
-                writer.WriteLine("{0},{1},{2},{3},{4}",
-                    graph.Vertices[graph.Edges[e].Src].OriginalId,
-                    graph.Vertices[graph.Edges[e].Dst].OriginalId,
-                    cap[e], gain[e], flow[e]);
+                if (flow[e] > 1e-10) {
+                    writer.WriteLine("{0},{1},{2},{3},{4}",
+                        graph.Vertices[graph.Edges[e].Src].OriginalId,
+                        graph.Vertices[graph.Edges[e].Dst].OriginalId,
+                        cap[e], gain[e], flow[e]);
+                }
             }
         }
     }
